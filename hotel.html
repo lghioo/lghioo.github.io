@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="shortcut icon" href="./img/hotel.ico">
+<head>
+    <meta charset="UTF-8">
+    <title>酒店</title>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/html2canvas.js"></script>
+</head>
+<style>
+    #img {
+        /*display: none;*/
+    }
+    .my-div img{
+        width: 600px; height: 300px
+    }
+    .my-div {
+        width: 600px;
+        height: 300px;
+        position: relative;
+    }
+    .my-value {
+        left: 0;
+        top: 20px;
+        position: absolute;
+    }
+		.button {
+			padding: 4px 15px;
+			color: firebrick;
+			position: fixed;
+			top: 50px;
+			right: 200px;
+			font-size: 18px;
+			background: burlywood;
+		}
+</style>
+<body>
+	<div class="my-div">
+	    <img src="img/a.jpg"/>
+	    <input class="my-value" value="截图"/>
+	</div>
+	<br/>
+		<input class="button" type="button" onclick="set()" value="截 图" />
+	<img id="img"/>
+
+<script>
+  function set() {
+    //要转换为图片的dom对象
+    var element = document.querySelector('.my-div');
+    console.log(element)
+    var name = document.querySelector('.my-value').value + ' Hotel';
+    //要显示图片的img标签
+    var image = document.querySelector('#img');
+    //调用html2image方法
+    html2image(element, image);
+
+    function html2image(element, image) {
+      html2canvas(element,{
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: '#545445'
+            }).then(function (canvas) {
+      	console.log(canvas)
+        // toDataURL(type, encoderOptions)
+        //type指定转换为base64编码后图片的格式，如：image/png、image/jpeg、image/webp等等，默认为image/png格式；
+        // encoderOptions用于设置转换为base64编码后图片的质量，取值范围为0-1，超出取值范围用默认值0.92代替；
+        var imageData = canvas.toDataURL(1);
+        //此时图片已经可以显示了
+        image.src = imageData;
+        savaImage(imageData, name)
+      });
+    }
+
+    function savaImage(data, filename) {
+      var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+      save_link.href = data;
+      save_link.download = filename;
+      var event = document.createEvent('MouseEvents');
+      event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+//    save_link.dispatchEvent(event);
+    }
+  }
+</script>
+</body>
+</html>
